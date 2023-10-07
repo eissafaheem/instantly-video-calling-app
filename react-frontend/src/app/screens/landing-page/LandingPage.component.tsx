@@ -8,7 +8,7 @@ import InputComponent from '../../components/input/Input.component'
 
 function LandingPageComponent() {
 
-  const {setRoomId} = useLandingPageHook();
+  const { setRoomId, handleJoinRoom } = useLandingPageHook();
 
   return (
     <div className={LandingStyles['landing-main-container']}>
@@ -28,9 +28,9 @@ function LandingPageComponent() {
           </div>
           <div className={LandingStyles["functionalities"]}>
             <ButtonComponent text='Create' type='primary' onClick={() => { }} />
-            <form className={LandingStyles['meeting-form']}>
-              <InputComponent placeholder='Enter meeting code' setValue={setRoomId} type='text'/>
-              <ButtonComponent text='Join' type='secondary' onClick={() => { }} />
+            <form className={LandingStyles['meeting-form']} onSubmit={ (event: React.FormEvent) => { handleJoinRoom(event) } }>
+              <InputComponent placeholder='Enter meeting code' setValue={setRoomId} type='text' />
+              <ButtonComponent text='Join' type='secondary'/>
             </form>
           </div>
         </div>
