@@ -1,0 +1,80 @@
+.landing-main-container {
+    /* border: 1px solid red; */
+}
+
+.landing-main-container header {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--primary_color);
+    /* font-size: xx-large; */
+}
+
+.landing-main-container header img {
+    height: 4rem;
+}
+
+.landing-main-container .content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 3rem;
+}
+
+.landing-main-container .content .brand-info {
+
+    padding-top: 10%;
+    padding-left: 10%;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.landing-main-container .content .functionalities {
+    display: flex;
+    gap: 2rem;
+}
+
+.landing-main-container .content .meeting-form{
+    display: flex;
+    gap: 0.5rem;
+}
+
+.landing-main-container .content .illustration {
+    height: 30rem;
+}
+
+@media screen and (max-width: 850px) {
+    .landing-main-container .content {
+        /* grid-template-columns: 1fr; */
+        display: flex;
+        flex-direction: column;
+        /* align-items: center; */
+        justify-content: center;
+    }
+
+    .landing-main-container .content .illustration{
+        height: 20rem;
+    }
+
+}
+
+@media screen and (max-width: 600px) {
+
+    .landing-main-container .content {
+        display: block;
+    }
+
+    .landing-main-container .content .brand-info {
+        padding: 1rem;
+    }
+
+    .landing-main-container .content .functionalities {
+        justify-content: space-between;
+    }
+
+
+    .illustration {
+        display: none;
+    }
+}
