@@ -4,16 +4,25 @@ import { useNavigate } from 'react-router-dom'
 export function useLandingPageHook() {
 
     const [roomId, setRoomId] = useState<string>("");
+    const [toasterMessage, setToasterMessage] = useState<string>("Your room code is 8618!");
+    const [isToasterVisible, setIsToasterVisible] = useState<boolean>(false);
     const navigate = useNavigate();
     
     function handleJoinRoom(event: React.FormEvent) {
         event.preventDefault();
-        console.log(roomId)
         navigate(`${roomId}`)
+    }
+    
+    function handleCreateTeam(){
+        navigate(`eissa`)
     }
 
     return {
         setRoomId,
-        handleJoinRoom
+        handleJoinRoom,
+        toasterMessage,
+        isToasterVisible,
+        setIsToasterVisible,
+        handleCreateTeam
     }
 }

@@ -7,10 +7,10 @@ import videoOff from './../../../assets/video-off.svg'
 import videoOn from './../../../assets/video-on.svg'
 import callEnd from './../../../assets/call-end.svg'
 import { useRoomPageHook } from './Room.hook'
+import ToasterComponent from '../../components/toaster/Toaster.component'
 
 function RoomComponent() {
 
-  const { roomId } = useParams();
   const {
     handleMicClick,
     handleVideoClick,
@@ -20,7 +20,10 @@ function RoomComponent() {
     handleControlsVisible,
     isOtherMicOn,
     isOtherVideoOn,
-    handleEndCall
+    handleEndCall,
+    toasterMessage,
+    isToasterVisible,
+    setIsToasterVisible
   } = useRoomPageHook();
 
   return (
@@ -31,13 +34,8 @@ function RoomComponent() {
         </div>
         <div className={RoomStyles["other-stream"]}>
           <div className={RoomStyles["other-controls"]}>
-            <img src={isOtherMicOn ? micOn : micOff} alt="Mic"
-              className={`${isMicOn ? RoomStyles['active'] : RoomStyles['inactive']}`}
-              onClick={handleMicClick}
-            />
-            <img src={isVideoOn ? videoOn : videoOff} alt="Video"
-              className={`${isOtherVideoOn ? RoomStyles['active'] : RoomStyles['inactive']}`}
-              onClick={handleVideoClick} />
+            <img src={isOtherMicOn ? micOn : micOff} alt="Mic"/>
+            <img src={isOtherVideoOn ? videoOn : videoOff} alt="Video"/>
           </div>
         </div>
         <div className={`${RoomStyles["my-controls"]} ${!isControlsVisible && RoomStyles["hide-my-controls"]}`}>
@@ -45,12 +43,17 @@ function RoomComponent() {
             className={`${isMicOn ? RoomStyles['active'] : RoomStyles['inactive']}`}
             onClick={handleMicClick}
           />
-          <img src={callEnd} alt="Call End" className={RoomStyles['inactive']} 
-          onClick={handleEndCall}/>
+          <img src={callEnd} alt="Call End" className={RoomStyles['inactive']}
+            onClick={handleEndCall} />
           <img src={isVideoOn ? videoOn : videoOff} alt="Video"
             className={`${isVideoOn ? RoomStyles['active'] : RoomStyles['inactive']}`}
             onClick={handleVideoClick} />
         </div>
+        {
+          isToasterVisible &&
+          <ToasterComponent message={toasterMessage}
+            setIsToasterVisible={setIsToasterVisible} />
+        }
       </div>
     </div>
   )

@@ -1,39 +1,39 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-export function useRoomPageHook(){
+export function useRoomPageHook() {
 
+    const { roomId } = useParams();
     const navigate = useNavigate();
     const [isControlsVisible, setIsControlsVisible] = useState<boolean>(true);
     const [isMicOn, setIsMicOn] = useState<boolean>(true);
     const [isVideoOn, setIsVideoOn] = useState<boolean>(true);
     const [isOtherMicOn, setIsOtherMicOn] = useState<boolean>(true);
     const [isOtherVideoOn, setIsOtherVideoOn] = useState<boolean>(true);
+    const [toasterMessage, setToasterMessage] = useState<string>(`Your room code is ${roomId}`);
+    const [isToasterVisible, setIsToasterVisible] = useState<boolean>(true);
+
     let controlsTimer: NodeJS.Timeout;
 
-    useEffect(()=>{
-        console.log(isControlsVisible)
-    },[isControlsVisible])
-
-    function handleControlsVisible(){
-        if(controlsTimer){
+    function handleControlsVisible() {
+        if (controlsTimer) {
             clearTimeout(controlsTimer);
         }
         setIsControlsVisible(true);
-        controlsTimer = setTimeout(()=>{
+        controlsTimer = setTimeout(() => {
             setIsControlsVisible(false);
-        },3000)
+        }, 3000)
     }
 
-    function handleEndCall(){
+    function handleEndCall() {
         navigate('/');
     }
 
-    function handleMicClick(){
+    function handleMicClick() {
         setIsMicOn(!isMicOn)
     }
 
-    function handleVideoClick(){
+    function handleVideoClick() {
         setIsVideoOn(!isVideoOn)
     }
 
@@ -46,6 +46,9 @@ export function useRoomPageHook(){
         handleControlsVisible,
         isOtherMicOn,
         isOtherVideoOn,
-        handleEndCall
+        handleEndCall,
+        toasterMessage,
+        isToasterVisible,
+        setIsToasterVisible
     }
 }

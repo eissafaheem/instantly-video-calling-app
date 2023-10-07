@@ -1,0 +1,24 @@
+.toaster-container{
+    position: fixed;
+    display: flex;
+    top: 1rem;
+    gap: 1rem;
+    right: 1rem;
+    background-color: var(--secondary_color);
+    max-width: 25%;
+    padding: 1rem;
+    border-radius: var(--app_border_radius);
+    box-shadow: 0px 0px 10px var(--app_border_color);
+}
+
+.close-icon{
+    background-color: var(--app_border_color);
+    border-radius: var(--app_curve_border_radius);
+    height: 1rem;
+}
+
+@media screen and (max-width: 850px) {
+    .toaster-container{
+        max-width: 40%;
+    }
+}

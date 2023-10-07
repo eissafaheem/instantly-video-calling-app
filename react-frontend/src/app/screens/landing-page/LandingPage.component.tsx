@@ -5,10 +5,18 @@ import illustration from '../../../assets/landing-page-illustration.svg'
 import ButtonComponent from '../../components/button/Button.component'
 import { useLandingPageHook } from './LandingPage.hook'
 import InputComponent from '../../components/input/Input.component'
+import ToasterComponent from '../../components/toaster/Toaster.component'
 
 function LandingPageComponent() {
 
-  const { setRoomId, handleJoinRoom } = useLandingPageHook();
+  const {
+    setRoomId,
+    handleJoinRoom,
+    isToasterVisible,
+    toasterMessage,
+    setIsToasterVisible,
+    handleCreateTeam
+  } = useLandingPageHook();
 
   return (
     <div className={LandingStyles['landing-main-container']}>
@@ -27,15 +35,20 @@ function LandingPageComponent() {
             <p>Revolutionary video calling app for design and code reviews. <br /> With Vision, you ‘ll never to leave you house again.</p>
           </div>
           <div className={LandingStyles["functionalities"]}>
-            <ButtonComponent text='Create' type='primary' onClick={() => { }} />
-            <form className={LandingStyles['meeting-form']} onSubmit={ (event: React.FormEvent) => { handleJoinRoom(event) } }>
+            <ButtonComponent text='Create' type='primary' onClick={handleCreateTeam} />
+            <form className={LandingStyles['meeting-form']} onSubmit={(event: React.FormEvent) => { handleJoinRoom(event) }}>
               <InputComponent placeholder='Enter meeting code' setValue={setRoomId} type='text' />
-              <ButtonComponent text='Join' type='secondary'/>
+              <ButtonComponent text='Join' type='secondary' />
             </form>
           </div>
         </div>
         <img src={illustration} className={LandingStyles['illustration']} alt="Video calling" />
       </div>
+      {
+        isToasterVisible &&
+        <ToasterComponent message={toasterMessage}
+          setIsToasterVisible={setIsToasterVisible} />
+      }
     </div>
   )
 }
