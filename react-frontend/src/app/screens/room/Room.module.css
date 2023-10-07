@@ -1,0 +1,74 @@
+.room-main-container{
+    background-color: var(--room_background_color);
+    height: 100vh;
+    color: var(--text1_color);
+}
+
+.all-streams{
+    height: calc(100% - 2rem);
+    position: relative;
+    padding: 1rem;
+}
+
+.my-stream{
+    background-color: var(--app_translucent_background_color);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 1rem;
+    height: 25%;
+    width: 25%;
+    border-radius: var(--app_border_radius);
+}
+
+.other-stream{
+    height: 100%;
+    background-color: var(--app_translucent_background_color);
+    border-radius: var(--app_border_radius);
+    position: relative;
+}
+
+.other-stream .other-controls{
+    position: absolute;
+}
+
+.other-stream .other-controls > * {
+    margin: 1rem;
+    margin-right: 0;
+}
+
+.room-main-container .my-controls{
+    position: absolute;
+    display: flex;
+    gap: 1rem;
+    bottom: 0;
+    right: 50%;
+    transform: translate(50%, -50%);
+    transform-origin: center;
+    padding: 0.5rem;
+    background-color: var(--app_translucent_background_color);
+    border-radius: var(--app_curve_border_radius);
+    transition: opacity 1s ease;
+}
+
+.room-main-container .hide-my-controls{
+    opacity: 0;
+}
+
+.room-main-container .hide-my-controls:hover{
+    opacity: 1;
+}
+
+.room-main-container .my-controls .active{
+    background-color: var(--success_color);
+    border-radius: var(--app_curve_border_radius);
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.room-main-container .my-controls .inactive{
+    background-color: var(--danger_color);
+    border-radius: var(--app_curve_border_radius);
+    padding: 1rem;
+    cursor: pointer;
+}

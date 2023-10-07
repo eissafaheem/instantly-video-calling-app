@@ -1,6 +1,6 @@
 .input-styles{
     outline: none;
     border: 1px solid var(--app_border_color);
-    border-radius: 8px;
+    border-radius: var(--app_border_radius);
     padding: 0 1ch;
 }

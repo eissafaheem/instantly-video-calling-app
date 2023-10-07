@@ -2,7 +2,7 @@
     outline: none;
     border: none;
     padding: 0.5rem 1rem;
-    border-radius: 8px;
+    border-radius: var(--app_border_radius);
     cursor: pointer;
 }
 

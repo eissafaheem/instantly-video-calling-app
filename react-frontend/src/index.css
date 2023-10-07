@@ -16,5 +16,14 @@ code {
 :root{
   --primary_color: #141EFF;
   --secondary_color: #FFFFFF;
+  --success_color: green;
+  --danger_color: red;
+  --text1_color: #FFFFFF; 
   --app_border_color: #c7c7c7;
+  --room_background_color: #3e3e3e;
+  --room_background_color: #000000;
+  --camera_background_color: #3e3e3e;
+  --app_translucent_background_color: #3e3e3e7a;
+  --app_border_radius: 8px;
+  --app_curve_border_radius: 100px
 }
