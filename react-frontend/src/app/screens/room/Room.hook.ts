@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSocket } from "../../context/SocketProvider";
 import { SocketEventsEnum } from "../../utils/enums/SocketEventsEnum";
 import { start } from "repl";
+import { peerService } from "../../App.registration";
 
 export function useRoomPageHook() {
 
@@ -24,24 +25,20 @@ export function useRoomPageHook() {
     useEffect(() => {
         socket?.on(SocketEventsEnum.JOIN_ROOM, handleOthersJoinRoom)
         getMyStream();
-        return ()=>{
+        return () => {
             socket?.off(SocketEventsEnum.JOIN_ROOM, handleOthersJoinRoom);
         }
     }, [])
     
-    async function getMyStream(){
-        const stream = await navigator.mediaDevices.getUserMedia({audio: true, video: true});
-        setMyStream(stream);
-    }
-
-    useEffect(() => {
-        setToasterMessage(`Your meeting code is ${roomIdState}`);
-        setIsToasterVisible(true);
-    }, [roomIdState])
-
     const handleOthersJoinRoom = useCallback((data: { userId: string, socketId: string }) => {
         setRemoteSocketId(data.socketId);
-    }, []);
+        // requestCall();
+    }, [roomId]);
+
+    async function requestCall() {
+        const offer = await peerService.getOffer();
+        socket?.emit(SocketEventsEnum.CALL_REQUEST, { offer, to: remoteSocketId })
+    }
 
     function handleControlsVisible() {
         if (controlsTimer) {
@@ -52,6 +49,17 @@ export function useRoomPageHook() {
             setIsControlsVisible(false);
         }, 3000)
     }
+
+    useEffect(() => {
+        setToasterMessage(`Your meeting code is ${roomIdState}`);
+        setIsToasterVisible(true);
+    }, [roomIdState])
+
+    async function getMyStream() {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        setMyStream(stream);
+    }
+
 
     function handleEndCall() {
         navigate('/');

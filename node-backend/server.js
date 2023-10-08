@@ -13,4 +13,8 @@ io.on('connection', (socket) => {
         socket.join(roomId);
         socket.to(roomId).emit('join-room',{ userId, socketId: socket.id });
     })
+
+    socket.on('call-request', (data)=>{
+        console.log(data);
+    })
 })

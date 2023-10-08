@@ -33,7 +33,7 @@ function RoomComponent() {
     <div className={RoomStyles['room-main-container']} onMouseMove={handleControlsVisible}>
       <div className={RoomStyles["all-streams"]}>
         <div className={RoomStyles["my-stream"]}>
-          <ReactPlayer playing muted height={"100%"} width={"100%"} url={isVideoOn ? myStream : ""} />
+          <ReactPlayer playing muted height={"100%"} width={"100%"} url={myStream} />
         </div>
         <div className={RoomStyles["other-stream"]}>
           <div className={RoomStyles["other-controls"]}>
