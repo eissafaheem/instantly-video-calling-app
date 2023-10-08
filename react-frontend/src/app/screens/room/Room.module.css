@@ -19,6 +19,7 @@
     height: 25%;
     width: 25%;
     border-radius: var(--app_border_radius);
+    z-index: 1;
 }
 
 .other-stream{
@@ -26,10 +27,19 @@
     background-color: var(--app_translucent_background_color);
     border-radius: var(--app_border_radius);
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .other-stream .other-controls{
     position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.other-stream p {
+    text-align: center;
 }
 
 .other-stream .other-controls > * {

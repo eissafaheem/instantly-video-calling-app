@@ -8,6 +8,7 @@ import videoOn from './../../../assets/video-on.svg'
 import callEnd from './../../../assets/call-end.svg'
 import { useRoomPageHook } from './Room.hook'
 import ToasterComponent from '../../components/toaster/Toaster.component'
+import ReactPlayer from 'react-player'
 
 function RoomComponent() {
 
@@ -23,20 +24,30 @@ function RoomComponent() {
     handleEndCall,
     toasterMessage,
     isToasterVisible,
-    setIsToasterVisible
+    setIsToasterVisible,
+    remoteSocketId,
+    myStream
   } = useRoomPageHook();
 
   return (
     <div className={RoomStyles['room-main-container']} onMouseMove={handleControlsVisible}>
       <div className={RoomStyles["all-streams"]}>
         <div className={RoomStyles["my-stream"]}>
-
+          <ReactPlayer playing muted height={"100%"} width={"100%"} url={isVideoOn ? myStream : ""} />
         </div>
         <div className={RoomStyles["other-stream"]}>
           <div className={RoomStyles["other-controls"]}>
-            <img src={isOtherMicOn ? micOn : micOff} alt="Mic"/>
-            <img src={isOtherVideoOn ? videoOn : videoOff} alt="Video"/>
+            <img src={isOtherMicOn ? micOn : micOff} alt="Mic" />
+            <img src={isOtherVideoOn ? videoOn : videoOff} alt="Video" />
           </div>
+          {
+            !remoteSocketId
+            &&
+            <p>
+              No users present. <br />
+              Invite with code or link
+            </p>
+          }
         </div>
         <div className={`${RoomStyles["my-controls"]} ${!isControlsVisible && RoomStyles["hide-my-controls"]}`}>
           <img src={isMicOn ? micOn : micOff} alt="Mic"

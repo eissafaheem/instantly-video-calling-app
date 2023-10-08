@@ -15,7 +15,7 @@ function LandingPageComponent() {
     isToasterVisible,
     toasterMessage,
     setIsToasterVisible,
-    handleCreateTeam
+    handleCreateRoom
   } = useLandingPageHook();
 
   return (
@@ -35,7 +35,7 @@ function LandingPageComponent() {
             <p>Revolutionary video calling app for design and code reviews. <br /> With Vision, you ‘ll never to leave you house again.</p>
           </div>
           <div className={LandingStyles["functionalities"]}>
-            <ButtonComponent text='Create' type='primary' onClick={handleCreateTeam} />
+            <ButtonComponent text='Create' type='primary' onClick={handleCreateRoom} />
             <form className={LandingStyles['meeting-form']} onSubmit={(event: React.FormEvent) => { handleJoinRoom(event) }}>
               <InputComponent placeholder='Enter meeting code' setValue={setRoomId} type='text' />
               <ButtonComponent text='Join' type='secondary' />

@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
+import { useSocket } from "../../context/SocketProvider";
+import { SocketEventsEnum } from "../../utils/enums/SocketEventsEnum";
+import { start } from "repl";
 
 export function useRoomPageHook() {
 
     const { roomId } = useParams();
     const navigate = useNavigate();
+    const [myStream, setMyStream] = useState<MediaStream | string>("");
+    const [remoteSocketId, setRemoteSocketId] = useState<string | null>(null);
     const [roomIdState, setRoomIdState] = useState<string | undefined>(roomId);
     const [isControlsVisible, setIsControlsVisible] = useState<boolean>(true);
     const [isMicOn, setIsMicOn] = useState<boolean>(true);
@@ -13,12 +18,30 @@ export function useRoomPageHook() {
     const [isOtherVideoOn, setIsOtherVideoOn] = useState<boolean>(true);
     const [toasterMessage, setToasterMessage] = useState<string>("");
     const [isToasterVisible, setIsToasterVisible] = useState<boolean>(false);
+    const socket = useSocket();
     let controlsTimer: NodeJS.Timeout;
 
-    useEffect(()=>{
+    useEffect(() => {
+        socket?.on(SocketEventsEnum.JOIN_ROOM, handleOthersJoinRoom)
+        getMyStream();
+        return ()=>{
+            socket?.off(SocketEventsEnum.JOIN_ROOM, handleOthersJoinRoom);
+        }
+    }, [])
+    
+    async function getMyStream(){
+        const stream = await navigator.mediaDevices.getUserMedia({audio: true, video: true});
+        setMyStream(stream);
+    }
+
+    useEffect(() => {
         setToasterMessage(`Your meeting code is ${roomIdState}`);
         setIsToasterVisible(true);
-    },[roomIdState])
+    }, [roomIdState])
+
+    const handleOthersJoinRoom = useCallback((data: { userId: string, socketId: string }) => {
+        setRemoteSocketId(data.socketId);
+    }, []);
 
     function handleControlsVisible() {
         if (controlsTimer) {
@@ -54,6 +77,8 @@ export function useRoomPageHook() {
         handleEndCall,
         toasterMessage,
         isToasterVisible,
-        setIsToasterVisible
+        setIsToasterVisible,
+        remoteSocketId,
+        myStream
     }
 }

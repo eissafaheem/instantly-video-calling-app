@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom'
+import { generateUniqueRoomId, generateUniqueUserId } from "../../utils/generator";
+import { useSocket } from "../../context/SocketProvider";
+import { SocketEventsEnum } from "../../utils/enums/SocketEventsEnum";
 
 export function useLandingPageHook() {
 
@@ -7,14 +10,19 @@ export function useLandingPageHook() {
     const [toasterMessage, setToasterMessage] = useState<string>("");
     const [isToasterVisible, setIsToasterVisible] = useState<boolean>(false);
     const navigate = useNavigate();
-    
+    const socket = useSocket();
+    const userId = generateUniqueUserId();
+
     function handleJoinRoom(event: React.FormEvent) {
         event.preventDefault();
+        socket?.emit(SocketEventsEnum.JOIN_ROOM, { userId, roomId })
         navigate(`${roomId}`);
     }
-    
-    function handleCreateTeam(){
-        navigate(`/eissa`);
+
+    function handleCreateRoom() {
+        const generatedRoomID = generateUniqueRoomId();
+        socket?.emit(SocketEventsEnum.JOIN_ROOM, { userId, roomId:generatedRoomID })
+        navigate(`/${generatedRoomID}`);
     }
 
     return {
@@ -23,6 +31,6 @@ export function useLandingPageHook() {
         toasterMessage,
         isToasterVisible,
         setIsToasterVisible,
-        handleCreateTeam
+        handleCreateRoom
     }
 }

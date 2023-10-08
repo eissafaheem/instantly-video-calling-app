@@ -27,3 +27,8 @@ code {
   --app_border_radius: 8px;
   --app_curve_border_radius: 100px
 }
+
+video{
+  object-fit: cover;
+  border-radius: var(--app_border_radius);
+}
