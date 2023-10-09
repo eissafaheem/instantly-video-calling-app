@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSocket } from "../../context/SocketProvider";
 import { SocketEventsEnum } from "../../utils/enums/SocketEventsEnum";
 import { start } from "repl";
-import { peerService } from "../../App.registration";
+import { peerService as peer } from "./../../App.registration";
 
 export function useRoomPageHook() {
 
@@ -24,21 +24,39 @@ export function useRoomPageHook() {
 
     useEffect(() => {
         socket?.on(SocketEventsEnum.JOIN_ROOM, handleOthersJoinRoom)
+        socket?.on(SocketEventsEnum.CALL_INCOMING, incomingCall)
+        socket?.on(SocketEventsEnum.CALL_ANSWER, callAnswer)
         getMyStream();
         return () => {
             socket?.off(SocketEventsEnum.JOIN_ROOM, handleOthersJoinRoom);
+            socket?.off(SocketEventsEnum.CALL_INCOMING, incomingCall);
+            socket?.off(SocketEventsEnum.CALL_ANSWER, callAnswer)
         }
     }, [])
-    
+
     const handleOthersJoinRoom = useCallback((data: { userId: string, socketId: string }) => {
         setRemoteSocketId(data.socketId);
-        // requestCall();
+        requestCall(data.socketId);
     }, [roomId]);
 
-    async function requestCall() {
-        const offer = await peerService.getOffer();
+    async function requestCall(remoteSocketId: string) {
+        console.log("Requesting...")
+        const offer = await peer.getOffer();
         socket?.emit(SocketEventsEnum.CALL_REQUEST, { offer, to: remoteSocketId })
     }
+
+    const incomingCall = useCallback(async (data: { offer: RTCSessionDescriptionInit, from: string }) => {
+        const { from, offer } = data;
+        setRemoteSocketId(from);
+        const ans = await peer.getAnswer(offer);
+        socket?.emit(SocketEventsEnum.CALL_ANSWER, { ans, to: from });
+    }, [roomId]);
+    
+    const callAnswer = useCallback(async (data: { ans: RTCSessionDescription }) => {
+        const { ans } = data;
+        await peer.setRemoteDescription(ans);
+    }, [])
+
 
     function handleControlsVisible() {
         if (controlsTimer) {
