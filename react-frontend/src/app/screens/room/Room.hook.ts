@@ -3,14 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSocket } from "../../context/SocketProvider";
 import { SocketEventsEnum } from "../../utils/enums/SocketEventsEnum";
 import { start } from "repl";
-import { peerService as peer } from "./../../App.registration";
+import { peerService } from "./../../App.registration";
+import { PeerEventsEnum } from "../../utils/enums/PeerEventsEnum";
 
 export function useRoomPageHook() {
 
     const { roomId } = useParams();
     const navigate = useNavigate();
-    const [myStream, setMyStream] = useState<MediaStream | string>("");
-    const [remoteSocketId, setRemoteSocketId] = useState<string | null>(null);
+    const [remoteStream, setRemoteStream] = useState<MediaStream>();
+    const [myStream, setMyStream] = useState<MediaStream>();
+    const [remoteSocketId, setRemoteSocketId] = useState<string>("");
     const [roomIdState, setRoomIdState] = useState<string | undefined>(roomId);
     const [isControlsVisible, setIsControlsVisible] = useState<boolean>(true);
     const [isMicOn, setIsMicOn] = useState<boolean>(true);
@@ -26,7 +28,6 @@ export function useRoomPageHook() {
         socket?.on(SocketEventsEnum.JOIN_ROOM, handleOthersJoinRoom)
         socket?.on(SocketEventsEnum.CALL_INCOMING, incomingCall)
         socket?.on(SocketEventsEnum.CALL_ANSWER, callAnswer)
-        getMyStream();
         return () => {
             socket?.off(SocketEventsEnum.JOIN_ROOM, handleOthersJoinRoom);
             socket?.off(SocketEventsEnum.CALL_INCOMING, incomingCall);
@@ -34,29 +35,64 @@ export function useRoomPageHook() {
         }
     }, [])
 
+    useEffect(() => {
+        peerService.peer.addEventListener(PeerEventsEnum.NEGOTIATION_NEEDED, handleNegotiation)
+        peerService.peer.addEventListener(PeerEventsEnum.TRACK, handleTracks)
+
+        return () => {
+            peerService.peer.removeEventListener(PeerEventsEnum.NEGOTIATION_NEEDED, handleNegotiation)
+            peerService.peer.removeEventListener(PeerEventsEnum.TRACK, handleTracks)
+        }
+    }, [remoteSocketId])
+
+    useEffect(() => {
+        getMyStream();
+    }, [])
+
     const handleOthersJoinRoom = useCallback((data: { userId: string, socketId: string }) => {
         setRemoteSocketId(data.socketId);
         requestCall(data.socketId);
-    }, [roomId]);
+    }, []);
 
     async function requestCall(remoteSocketId: string) {
         console.log("Requesting...")
-        const offer = await peer.getOffer();
+        const offer = await peerService.getOffer();
         socket?.emit(SocketEventsEnum.CALL_REQUEST, { offer, to: remoteSocketId })
     }
 
     const incomingCall = useCallback(async (data: { offer: RTCSessionDescriptionInit, from: string }) => {
         const { from, offer } = data;
         setRemoteSocketId(from);
-        const ans = await peer.getAnswer(offer);
+        const ans = await peerService.getAnswer(offer);
         socket?.emit(SocketEventsEnum.CALL_ANSWER, { ans, to: from });
-    }, [roomId]);
-    
+    }, []);
+
     const callAnswer = useCallback(async (data: { ans: RTCSessionDescription }) => {
         const { ans } = data;
-        await peer.setRemoteDescription(ans);
+        await peerService.setRemoteDescription(ans);
     }, [])
 
+    const handleNegotiation = useCallback(() => {
+        requestCall(remoteSocketId);
+    }, [remoteSocketId])
+
+    const sendStream = useCallback(() => {
+        console.log("sending stream");
+        if (myStream) {
+            for (const track of myStream.getTracks()) {
+                console.log(track);
+                peerService.peer.addTrack(track, myStream);
+            }
+            console.log("ob")
+        }
+    }, [myStream])
+
+    const handleTracks = useCallback((event: RTCTrackEvent) => {
+        const streams = event.streams;
+        console.log("got stream")
+        console.log(streams)
+        setRemoteStream(streams[0]);
+    }, [])
 
     function handleControlsVisible() {
         if (controlsTimer) {
@@ -74,14 +110,14 @@ export function useRoomPageHook() {
     }, [roomIdState])
 
     async function getMyStream() {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: isMicOn, video: isVideoOn });
         setMyStream(stream);
     }
-
-
+    
     function handleEndCall() {
         navigate('/');
     }
+    
 
     function handleMicClick() {
         setIsMicOn(!isMicOn);
@@ -105,6 +141,8 @@ export function useRoomPageHook() {
         isToasterVisible,
         setIsToasterVisible,
         remoteSocketId,
-        myStream
+        myStream,
+        remoteStream,
+        sendStream
     }
 }

@@ -26,7 +26,9 @@ function RoomComponent() {
     isToasterVisible,
     setIsToasterVisible,
     remoteSocketId,
-    myStream
+    myStream,
+    remoteStream,
+    sendStream
   } = useRoomPageHook();
 
   return (
@@ -40,13 +42,16 @@ function RoomComponent() {
             <img src={isOtherMicOn ? micOn : micOff} alt="Mic" />
             <img src={isOtherVideoOn ? videoOn : videoOff} alt="Video" />
           </div>
+          <button onClick={sendStream}>Send</button>
           {
-            !remoteSocketId
-            &&
+            remoteStream
+            ?
+            <ReactPlayer playing  height={"100%"} width={"100%"} url={remoteStream} />
+            :
             <p>
-              No users present. <br />
-              Invite with code or link
-            </p>
+                No users present. <br />
+                Invite with code or link
+              </p>
           }
         </div>
         <div className={`${RoomStyles["my-controls"]} ${!isControlsVisible && RoomStyles["hide-my-controls"]}`}>
