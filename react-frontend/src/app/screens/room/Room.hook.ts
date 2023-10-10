@@ -10,6 +10,8 @@ export function useRoomPageHook() {
 
     const { roomId } = useParams();
     const navigate = useNavigate();
+    const [isStreamSent, setIsStreamSent] = useState<boolean>(false);
+    const [isStreamRecieved, setIsStreamRecieved] = useState<boolean>(false);
     const [remoteStream, setRemoteStream] = useState<MediaStream>();
     const [myStream, setMyStream] = useState<MediaStream>();
     const [remoteSocketId, setRemoteSocketId] = useState<string>("");
@@ -33,7 +35,7 @@ export function useRoomPageHook() {
             socket?.off(SocketEventsEnum.CALL_INCOMING, incomingCall);
             socket?.off(SocketEventsEnum.CALL_ANSWER, callAnswer)
         }
-    }, [])
+    }, [myStream, isStreamSent])
 
     useEffect(() => {
         peerService.peer.addEventListener(PeerEventsEnum.NEGOTIATION_NEEDED, handleNegotiation)
@@ -48,6 +50,15 @@ export function useRoomPageHook() {
     useEffect(() => {
         getMyStream();
     }, [])
+
+    useEffect(()=>{
+        if(isStreamRecieved && !isStreamSent){
+            console.log("sending.........")
+            sendStream();
+        }
+        else
+        console.log("not sending")
+    },[isStreamRecieved, myStream])
 
     const handleOthersJoinRoom = useCallback((data: { userId: string, socketId: string }) => {
         setRemoteSocketId(data.socketId);
@@ -70,27 +81,33 @@ export function useRoomPageHook() {
     const callAnswer = useCallback(async (data: { ans: RTCSessionDescription }) => {
         const { ans } = data;
         await peerService.setRemoteDescription(ans);
-    }, [])
+        sendStream();
+    }, [myStream, isStreamSent])
 
     const handleNegotiation = useCallback(() => {
         requestCall(remoteSocketId);
     }, [remoteSocketId])
 
-    const sendStream = useCallback(() => {
+    const sendStream = () => {
         console.log("sending stream");
-        if (myStream) {
+        if (myStream && !isStreamSent) {
             for (const track of myStream.getTracks()) {
                 console.log(track);
                 peerService.peer.addTrack(track, myStream);
             }
             console.log("ob")
+            setIsStreamSent(true);
         }
-    }, [myStream])
+        else{
+            console.log("not Object", myStream, !isStreamSent)
+        }
+    }
 
     const handleTracks = useCallback((event: RTCTrackEvent) => {
         const streams = event.streams;
         console.log("got stream")
         console.log(streams)
+        setIsStreamRecieved(true);
         setRemoteStream(streams[0]);
     }, [])
 

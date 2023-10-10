@@ -42,7 +42,6 @@ function RoomComponent() {
             <img src={isOtherMicOn ? micOn : micOff} alt="Mic" />
             <img src={isOtherVideoOn ? videoOn : videoOff} alt="Video" />
           </div>
-          <button onClick={sendStream}>Send</button>
           {
             remoteStream
             ?
