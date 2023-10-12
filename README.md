@@ -8,3 +8,4 @@ Feat
     Major
         creator of meeting left meeting has ended
         meeting does not exist
+        Screen sharing

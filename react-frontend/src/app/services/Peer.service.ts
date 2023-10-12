@@ -1,9 +1,13 @@
 
 export class PeerService {
 
-    peer: RTCPeerConnection;
+    peer: RTCPeerConnection | undefined ;
 
     constructor() {
+        this.initilizePeer();
+    }
+
+    initilizePeer(){
         this.peer = new RTCPeerConnection({
             iceServers: [
                 {
@@ -39,4 +43,9 @@ export class PeerService {
         }
     }
 
+    closeConnection() {
+        if(this.peer){
+            this.peer.close();
+        }
+    }
 }

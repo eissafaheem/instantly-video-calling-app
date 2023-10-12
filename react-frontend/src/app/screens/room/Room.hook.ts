@@ -27,6 +27,20 @@ export function useRoomPageHook() {
     let controlsTimer: NodeJS.Timeout;
 
     useEffect(() => {
+        getMyStream();
+    }, [])
+
+    useEffect(() => {
+        if (roomIdState) {
+            peerService.initilizePeer();
+        }
+
+        return () => {
+            peerService.closeConnection();
+        }
+    }, [roomIdState]);
+
+    useEffect(() => {
         socket?.on(SocketEventsEnum.JOIN_ROOM, handleOthersJoinRoom)
         socket?.on(SocketEventsEnum.CALL_INCOMING, incomingCall)
         socket?.on(SocketEventsEnum.CALL_ANSWER, callAnswer)
@@ -38,18 +52,14 @@ export function useRoomPageHook() {
     }, [myStream, isStreamSent])
 
     useEffect(() => {
-        peerService.peer.addEventListener(PeerEventsEnum.NEGOTIATION_NEEDED, handleNegotiation)
-        peerService.peer.addEventListener(PeerEventsEnum.TRACK, handleTracks)
+        peerService.peer?.addEventListener(PeerEventsEnum.NEGOTIATION_NEEDED, handleNegotiation)
+        peerService.peer?.addEventListener(PeerEventsEnum.TRACK, handleTracks)
 
         return () => {
-            peerService.peer.removeEventListener(PeerEventsEnum.NEGOTIATION_NEEDED, handleNegotiation)
-            peerService.peer.removeEventListener(PeerEventsEnum.TRACK, handleTracks)
+            peerService.peer?.removeEventListener(PeerEventsEnum.NEGOTIATION_NEEDED, handleNegotiation)
+            peerService.peer?.removeEventListener(PeerEventsEnum.TRACK, handleTracks)
         }
     }, [remoteSocketId])
-
-    useEffect(() => {
-        getMyStream();
-    }, [])
 
     useEffect(()=>{
         if(isStreamRecieved && !isStreamSent){
@@ -93,7 +103,7 @@ export function useRoomPageHook() {
         if (myStream && !isStreamSent) {
             for (const track of myStream.getTracks()) {
                 console.log(track);
-                peerService.peer.addTrack(track, myStream);
+                peerService.peer?.addTrack(track, myStream);
             }
             console.log("ob")
             setIsStreamSent(true);
