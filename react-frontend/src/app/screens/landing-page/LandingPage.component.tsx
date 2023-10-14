@@ -23,16 +23,16 @@ function LandingPageComponent() {
       <header>
         <img src={brandLogo} alt="Brand Logo" />
         <h1>
-          Vision
+          Instantly
         </h1>
       </header>
       <div className={LandingStyles["content"]}>
         <div className={LandingStyles["brand-info"]}>
           <div>
             <h1>
-              Bring people <br /> together to make <br /> visions happen
+              Create or Join <br /> Instant video meetings <br /> in seconds with Instantly
             </h1>
-            <p>Revolutionary video calling app for design and code reviews. <br /> With Vision, you ‘ll never to leave you house again.</p>
+            <p>Revolutionary video calling app. <br /> With instantly, you ‘ll never have to wait for leanthy,  <br /> signing process in time of urgency.</p>
           </div>
           <div className={LandingStyles["functionalities"]}>
             <ButtonComponent text='Create' type='primary' onClick={handleCreateRoom} />

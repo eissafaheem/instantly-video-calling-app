@@ -1,4 +1,4 @@
-# vision-video-calling-app
+# instantly-video-calling-app
 
 Feat
     Minor
