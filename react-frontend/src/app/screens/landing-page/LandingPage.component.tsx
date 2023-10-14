@@ -30,9 +30,9 @@ function LandingPageComponent() {
         <div className={LandingStyles["brand-info"]}>
           <div>
             <h1>
-              Create or Join <br /> Instant video meetings <br /> in seconds with Instantly
+              Create or Join  Instant <br /> video meetings in seconds 
             </h1>
-            <p>Revolutionary video calling app. <br /> With instantly, you ‘ll never have to wait for leanthy,  <br /> signing process in time of urgency.</p>
+            <p>With instantly, you ‘ll never have to wait for leanthy signing  <br />  process in time of urgency.</p>
           </div>
           <div className={LandingStyles["functionalities"]}>
             <ButtonComponent text='Create' type='primary' onClick={handleCreateRoom} />
