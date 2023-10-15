@@ -21,12 +21,4 @@ Peer can enter meeting code to join an existing meeting.
 When both users are present exchange of offer and answer is complete and  web rtc connection is setup to exchange video streams.
 ![image](https://github.com/eissafaheem/instantly-video-calling-app/assets/68000460/ceadc146-fa57-47eb-91c0-3fa459e21f61)
 
-Feat
-    Minor
-        eleminate peer connection
-        turning off video audio
-        notifying other about turning off and leaving
-    Major
-        creator of meeting left meeting has ended
-        meeting does not exist
-        Screen sharing
+
