@@ -1,5 +1,5 @@
 # instantly-video-calling-app
-WebRTC peer to peer connection video calling app for instant video meetings developed using React and ExpressJS. 
+WebRTC based peer to peer connection video calling app for instant video meetings developed using React and ExpressJS. 
 
 ## Landing Page
 There is an option to either create or join an existing meeting.
