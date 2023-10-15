@@ -1,4 +1,6 @@
 # instantly-video-calling-app
+
+## Landing Page
 ![image](https://github.com/eissafaheem/instantly-video-calling-app/assets/68000460/2f68ce1c-46e6-42e5-9ff4-56f93c97d6cb)
 
 ![image](https://github.com/eissafaheem/instantly-video-calling-app/assets/68000460/d06c2771-2cb4-427f-99e7-ab8819fb756c)
