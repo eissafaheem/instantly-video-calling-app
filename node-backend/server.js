@@ -1,7 +1,7 @@
 const { Server } = require("socket.io")
 const dotenv = require('dotenv').config()
 
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 const io = new Server(port, {
     cors: true
 })
